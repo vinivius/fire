@@ -2,6 +2,7 @@
 
 void setup() {
   Serial.begin(9600);
+  Serial.print("start");
   // put your setup code here, to run once:
 }
 
