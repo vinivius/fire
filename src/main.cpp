@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <EEPROM.h>
 #include "fauxmoESP.h"
 #include "credentials.h"
 
@@ -116,6 +117,13 @@ void setup() {
     }
   });
 
+  if(EEPROM.read(0) == 0xbb){
+    EEPROM.write(0, 0xaa);
+    statee = EEPROM.read(1);
+  } else {
+    statee = 2;
+  }
+
 }
 
 void loop() {
@@ -153,6 +161,13 @@ void loop() {
   default:
     break;
   }
+
+   if(WiFi.status() != WL_CONNECTED){
+     EEPROM.write(0, 0xbb);
+     EEPROM.write(1, statee);
+     EEPROM.commit();
+     ESP.restart();
+   }
 
   static unsigned long last = millis();
   if (millis() - last > 5000) {
